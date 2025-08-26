@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebElementEntity>
+   <description></description>
+   <name>div_System UsersUsernameUser Role-- Select _3397a3</name>
+   <tag></tag>
+   <elementGuidId>6484db78-193b-403f-a6b3-5bd24a285241</elementGuidId>
+   <selectorCollection>
+      <entry>
+         <key>XPATH</key>
+         <value>//div[@id='app']/div/div[2]/div[2]/div</value>
+      </entry>
+      <entry>
+         <key>CSS</key>
+         <value>div.orangehrm-background-container</value>
+      </entry>
+   </selectorCollection>
+   <selectorMethod>XPATH</selectorMethod>
+   <smartLocatorCollection>
+      <entry>
+         <key>SMART_LOCATOR</key>
+         <value>#app div >> internal:has-text=&quot;System UsersUsernameUser Role-- Select --Employee NameInvalidStatus-- Select -- &quot;i >> nth=3</value>
+      </entry>
+   </smartLocatorCollection>
+   <smartLocatorEnabled>false</smartLocatorEnabled>
+   <useRalativeImagePath>true</useRalativeImagePath>
+   <webElementProperties>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>tag</name>
+      <type>Main</type>
+      <value>div</value>
+      <webElementGuid>8566b9ad-e8a7-43c7-95e5-3b11976ea49c</webElementGuid>
+   </webElementProperties>
+   <webElementProperties>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>class</name>
+      <type>Main</type>
+      <value>orangehrm-background-container</value>
+      <webElementGuid>9714c035-58ea-47ad-9bbd-e0b71395bd21</webElementGuid>
+   </webElementProperties>
+   <webElementProperties>
+      <isSelected>true</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>text</name>
+      <type>Main</type>
+      <value>System UsersUsernameUser Role-- Select --Employee NameInvalidStatus-- Select -- Reset  Search  Add  (64) Records FoundUsernameAscendingDescendingUser RoleAscendingDescendingEmployee NameAscendingDescendingStatusAscendingDescendingActionsabdullahashfaq49ESSMuhammad AshfaqEnabledabdullahashfaq566ESSMuhammad AshfaqDisabledabdullahashfaq823ESSMuhammad AshfaqEnabledabdullahashfaq84ESSMuhammad AshfaqEnabledabdullahashfaq87ESSMuhammad AshfaqEnabledabdullahashfaq9ESSMuhammad AshfaqEnabledabdullahashfaq99ESSMuhammad AshfaqEnabledAdminAdminManda UserEnabledAdmin1AdminOrange TestEnabledAdmin1755587771055AdminRanga AkunuriEnabledAdmin2Admintest testEnabledAdmin3Adminsww testEnabledAdmin4Adminsww testEnabledAdmin5Adminsww testEnabledAdmin6AdminOrange TestEnabledAj1755587771055ESSRanga AkunuriEnabledAj1755587823932ESSRanga AkunuriDisabledajithhESSvijayalakshmii SEnabledanshulESSanshul kambojEnabledAshwinAdminThomas BennyEnabledauto.user7465AdminTimothy AmianoEnabledBalakESSOrange TestEnabledCharles28AdminCharles CarterEnabledcomsuaESSNguyen  Van NamEnableddixitAdminRanga AkunuriEnablededrftgyuhiopAdminPeter AndersonEnabledElasaAdminDHINA PEnabledemployeeESSThomas BennyEnabledijklmnopqESSffffffff sdfghjklEnabledJammie123ESSJames ButlerDisabledkirtik-1755587770571ESSkirtik-1755587770571 SinEnabledkirtik-1755587780059ESSkirtik-1755587780059 SinDisabledkunal016AdminA8DCo 010ZEnabledkunal031AdminA8DCo 010ZEnabledkunal034ESSA8DCo 010ZEnablednewuser123ESSRavi BEnabledram kumar ESSram  mittalEnabledrohini4ESSRohini PatilEnabledsachin_tendulkarAdminJames ButlerEnabledSana RaoAdminRanga AkunuriEnabledsdgsadgasdgsdgESSasdgasdgas sadsdgsDisabledTayyabaESSPT_User 951EnabledTest154ESSjava.util.Random@1ac85b0c java.util.Random@f8908f6EnabledTest305ESSjava.util.Random@62f68dff java.util.Random@6941827aEnabledTest391ESSjava.util.Random@64f857e7 java.util.Random@72efb5c1EnabledTest467ESSjava.util.Random@3af4e0bf java.util.Random@38875e7dEnabledTest617ESSjava.util.Random@3c989952 java.util.Random@17a87e37EnabledTest6a02fdESSTest6a02fd Test6a02fdEnabledTest718ESSjava.util.Random@7096b474 java.util.Random@2ca65ce4Enabledtest77ESSfirst77 last77Enabled12</value>
+      <webElementGuid>6ff77f8f-741c-47bb-84f4-808afe2cabbd</webElementGuid>
+   </webElementProperties>
+   <webElementProperties>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>xpath</name>
+      <type>Main</type>
+      <value>id(&quot;app&quot;)/div[@class=&quot;oxd-layout orangehrm-upgrade-layout&quot;]/div[@class=&quot;oxd-layout-container&quot;]/div[@class=&quot;oxd-layout-context&quot;]/div[@class=&quot;orangehrm-background-container&quot;]</value>
+      <webElementGuid>93e600d3-4cb9-4ac1-9736-c074f4d01f04</webElementGuid>
+   </webElementProperties>
+   <webElementXpaths>
+      <isSelected>true</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>xpath:idRelative</name>
+      <type>Main</type>
+      <value>//div[@id='app']/div/div[2]/div[2]/div</value>
+      <webElementGuid>28aa39c3-b5ca-495b-8437-e3e2ca021a96</webElementGuid>
+   </webElementXpaths>
+   <webElementXpaths>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>xpath:neighbor</name>
+      <type>Main</type>
+      <value>(.//*[normalize-space(text()) and normalize-space(.)='More'])[1]/following::div[5]</value>
+      <webElementGuid>4140e558-2514-41d9-9907-bd027255f51d</webElementGuid>
+   </webElementXpaths>
+   <webElementXpaths>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>xpath:neighbor</name>
+      <type>Main</type>
+      <value>(.//*[normalize-space(text()) and normalize-space(.)='Qualifications'])[1]/following::div[5]</value>
+      <webElementGuid>e8f589a5-19f9-40d8-bd3c-8b7bb7004fe2</webElementGuid>
+   </webElementXpaths>
+   <webElementXpaths>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>xpath:position</name>
+      <type>Main</type>
+      <value>//div[2]/div[2]/div</value>
+      <webElementGuid>c333da34-5387-4eb2-a506-643c1387f857</webElementGuid>
+   </webElementXpaths>
+   <webElementXpaths>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>xpath:customAttributes</name>
+      <type>Main</type>
+      <value>//div[(text() = 'System UsersUsernameUser Role-- Select --Employee NameInvalidStatus-- Select -- Reset  Search  Add  (64) Records FoundUsernameAscendingDescendingUser RoleAscendingDescendingEmployee NameAscendingDescendingStatusAscendingDescendingActionsabdullahashfaq49ESSMuhammad AshfaqEnabledabdullahashfaq566ESSMuhammad AshfaqDisabledabdullahashfaq823ESSMuhammad AshfaqEnabledabdullahashfaq84ESSMuhammad AshfaqEnabledabdullahashfaq87ESSMuhammad AshfaqEnabledabdullahashfaq9ESSMuhammad AshfaqEnabledabdullahashfaq99ESSMuhammad AshfaqEnabledAdminAdminManda UserEnabledAdmin1AdminOrange TestEnabledAdmin1755587771055AdminRanga AkunuriEnabledAdmin2Admintest testEnabledAdmin3Adminsww testEnabledAdmin4Adminsww testEnabledAdmin5Adminsww testEnabledAdmin6AdminOrange TestEnabledAj1755587771055ESSRanga AkunuriEnabledAj1755587823932ESSRanga AkunuriDisabledajithhESSvijayalakshmii SEnabledanshulESSanshul kambojEnabledAshwinAdminThomas BennyEnabledauto.user7465AdminTimothy AmianoEnabledBalakESSOrange TestEnabledCharles28AdminCharles CarterEnabledcomsuaESSNguyen  Van NamEnableddixitAdminRanga AkunuriEnablededrftgyuhiopAdminPeter AndersonEnabledElasaAdminDHINA PEnabledemployeeESSThomas BennyEnabledijklmnopqESSffffffff sdfghjklEnabledJammie123ESSJames ButlerDisabledkirtik-1755587770571ESSkirtik-1755587770571 SinEnabledkirtik-1755587780059ESSkirtik-1755587780059 SinDisabledkunal016AdminA8DCo 010ZEnabledkunal031AdminA8DCo 010ZEnabledkunal034ESSA8DCo 010ZEnablednewuser123ESSRavi BEnabledram kumar ESSram  mittalEnabledrohini4ESSRohini PatilEnabledsachin_tendulkarAdminJames ButlerEnabledSana RaoAdminRanga AkunuriEnabledsdgsadgasdgsdgESSasdgasdgas sadsdgsDisabledTayyabaESSPT_User 951EnabledTest154ESSjava.util.Random@1ac85b0c java.util.Random@f8908f6EnabledTest305ESSjava.util.Random@62f68dff java.util.Random@6941827aEnabledTest391ESSjava.util.Random@64f857e7 java.util.Random@72efb5c1EnabledTest467ESSjava.util.Random@3af4e0bf java.util.Random@38875e7dEnabledTest617ESSjava.util.Random@3c989952 java.util.Random@17a87e37EnabledTest6a02fdESSTest6a02fd Test6a02fdEnabledTest718ESSjava.util.Random@7096b474 java.util.Random@2ca65ce4Enabledtest77ESSfirst77 last77Enabled12' or . = 'System UsersUsernameUser Role-- Select --Employee NameInvalidStatus-- Select -- Reset  Search  Add  (64) Records FoundUsernameAscendingDescendingUser RoleAscendingDescendingEmployee NameAscendingDescendingStatusAscendingDescendingActionsabdullahashfaq49ESSMuhammad AshfaqEnabledabdullahashfaq566ESSMuhammad AshfaqDisabledabdullahashfaq823ESSMuhammad AshfaqEnabledabdullahashfaq84ESSMuhammad AshfaqEnabledabdullahashfaq87ESSMuhammad AshfaqEnabledabdullahashfaq9ESSMuhammad AshfaqEnabledabdullahashfaq99ESSMuhammad AshfaqEnabledAdminAdminManda UserEnabledAdmin1AdminOrange TestEnabledAdmin1755587771055AdminRanga AkunuriEnabledAdmin2Admintest testEnabledAdmin3Adminsww testEnabledAdmin4Adminsww testEnabledAdmin5Adminsww testEnabledAdmin6AdminOrange TestEnabledAj1755587771055ESSRanga AkunuriEnabledAj1755587823932ESSRanga AkunuriDisabledajithhESSvijayalakshmii SEnabledanshulESSanshul kambojEnabledAshwinAdminThomas BennyEnabledauto.user7465AdminTimothy AmianoEnabledBalakESSOrange TestEnabledCharles28AdminCharles CarterEnabledcomsuaESSNguyen  Van NamEnableddixitAdminRanga AkunuriEnablededrftgyuhiopAdminPeter AndersonEnabledElasaAdminDHINA PEnabledemployeeESSThomas BennyEnabledijklmnopqESSffffffff sdfghjklEnabledJammie123ESSJames ButlerDisabledkirtik-1755587770571ESSkirtik-1755587770571 SinEnabledkirtik-1755587780059ESSkirtik-1755587780059 SinDisabledkunal016AdminA8DCo 010ZEnabledkunal031AdminA8DCo 010ZEnabledkunal034ESSA8DCo 010ZEnablednewuser123ESSRavi BEnabledram kumar ESSram  mittalEnabledrohini4ESSRohini PatilEnabledsachin_tendulkarAdminJames ButlerEnabledSana RaoAdminRanga AkunuriEnabledsdgsadgasdgsdgESSasdgasdgas sadsdgsDisabledTayyabaESSPT_User 951EnabledTest154ESSjava.util.Random@1ac85b0c java.util.Random@f8908f6EnabledTest305ESSjava.util.Random@62f68dff java.util.Random@6941827aEnabledTest391ESSjava.util.Random@64f857e7 java.util.Random@72efb5c1EnabledTest467ESSjava.util.Random@3af4e0bf java.util.Random@38875e7dEnabledTest617ESSjava.util.Random@3c989952 java.util.Random@17a87e37EnabledTest6a02fdESSTest6a02fd Test6a02fdEnabledTest718ESSjava.util.Random@7096b474 java.util.Random@2ca65ce4Enabledtest77ESSfirst77 last77Enabled12')]</value>
+      <webElementGuid>4a018a1a-8ed3-4a50-8847-9112fa21152f</webElementGuid>
+   </webElementXpaths>
+</WebElementEntity>
