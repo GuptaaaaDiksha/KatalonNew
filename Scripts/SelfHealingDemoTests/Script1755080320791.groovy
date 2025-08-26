@@ -41,5 +41,7 @@ WebUI.setText(findTestObject('Object Repository/Page_OrangeHRM/input'), 'Diksha'
 
 WebUI.click(findTestObject('Object Repository/Page_OrangeHRM/div_System UsersUsernameUser Role-- Select _3397a3'))
 
-WebUI.click(findTestObject('Object Repository/Page_OrangeHRM/button_Search'))
+WebUI.click(findTestObject('Page_OrangeHRM/button_Search'))
+
+WebUI.delay(0)
 
