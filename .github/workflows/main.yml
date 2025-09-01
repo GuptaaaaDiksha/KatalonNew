@@ -1,70 +1,67 @@
-name: Katalon Test Workflow
+name: Katalon UI Test
 
 on:
   push:
-    branches: [ Develop ]
-  pull_request:
-    branches: [ Develop ]
-  workflow_dispatch:    # <-- enables manual UI trigger
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   katalon-test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Java
-      uses: actions/setup-java@v3
-      with:
-        distribution: temurin
-        java-version: '17'
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '17'
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -yqq unzip curl jq xvfb
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -yqq unzip curl jq xvfb
 
-    - name: Download Katalon Studio Engine
-      run: |
-        curl -LO https://github.com/katalon-studio/katalon-studio/releases/download/v9.2.0/Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
-        tar -xzf Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
+      - name: Download Katalon Studio Engine
+        run: |
+          curl -LO https://github.com/katalon-studio/katalon-studio/releases/download/v9.2.0/Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
+          tar -xzf Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
 
-    - name: Install ChromeDriver
-      run: |
-        DRIVER_VERSION="114.0.5735.90"
+      - name: Install ChromeDriver matching installed Chrome version
+        run: |
+          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+' | head -1)
+          echo "Installed Chrome version: $CHROME_VERSION"
+          
+          CHROME_MAJOR_VERSION=$(echo $CHROME_VERSION | cut -d '.' -f1)
+          DRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_MAJOR_VERSION")
+          echo "Matching ChromeDriver version: $DRIVER_VERSION"
 
-        echo "Downloading ChromeDriver version: $DRIVER_VERSION"
-        curl -LO https://chromedriver.storage.googleapis.com/$DRIVER_VERSION/chromedriver_linux64.zip
+          curl -LO https://chromedriver.storage.googleapis.com/${DRIVER_VERSION}/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip
+          chmod +x chromedriver
+          sudo mv chromedriver /usr/local/bin/chromedriver
 
-        if [ ! -f chromedriver_linux64.zip ]; then
-          echo "Failed to download ChromeDriver zip!"
-          exit 1
-        fi
+      - name: Start virtual display
+        run: |
+          Xvfb :99 -screen 0 1920x1080x24 &
+          sleep 3
+          echo "DISPLAY is $DISPLAY"
 
-        unzip chromedriver_linux64.zip
-        chmod +x chromedriver
-        sudo mv chromedriver /usr/local/bin/chromedriver
-
-    - name: Start virtual display
-      run: |
-        Xvfb :99 -screen 0 1920x1080x24 &
-        sleep 3
-        echo "DISPLAY is $DISPLAY"
-
-    - name: Run Katalon tests
-      env:
-        KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
-        DISPLAY: :99
-      run: |
-        ./Katalon_Studio_Engine_Linux_64-9.2.0/katalonc \
-          -noSplash \
-          -runMode=console \
-          -projectPath=$(pwd)/DemoTestsStudioAssist.prj \
-          -retry=0 \
-          -testSuitePath="Test Suites/selfHealingSuite" \
-          -executionProfile="default" \
-          -browserType="Chrome (headless)" \
-          -apiKey="${KATALON_API_KEY}"
-
+      - name: Run Katalon tests
+        env:
+          KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
+          DISPLAY: :99
+          KATALON_JAVA_HOME: ${{ env.JAVA_HOME }}
+        run: |
+          ./Katalon_Studio_Engine_Linux_64-9.2.0/katalonc \
+            -noSplash \
+            -runMode=console \
+            -projectPath=$(pwd)/DemoTestsStudioAssist.prj \
+            -retry=0 \
+            -testSuitePath="Test Suites/selfHealingSuite" \
+            -executionProfile="default" \
+            -browserType="Chrome (headless)" \
+            -apiKey="${KATALON_API_KEY}"
