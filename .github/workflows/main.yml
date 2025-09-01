@@ -11,59 +11,64 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Java
-      uses: actions/setup-java@v3
-      with:
-        distribution: temurin
-        java-version: '17'
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '17'
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -yqq unzip curl jq xvfb
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -yqq unzip curl jq xvfb
 
-    - name: Get latest stable Chrome-for-Testing version
-      id: get_chrome_version
-      run: |
-        LATEST_VERSION=$(curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json | jq -r '.channels.stable.version')
-        echo "Latest stable chrome version: $LATEST_VERSION"
-        echo "chrome_version=$LATEST_VERSION" >> $GITHUB_OUTPUT
+      - name: Get latest stable Chrome-for-Testing version
+        id: get_chrome_version
+        run: |
+          set -e
+          LATEST_VERSION=$(curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json | jq -r '.channels.stable.version')
+          echo "Latest stable Chrome version: $LATEST_VERSION"
+          echo "chrome_version=$LATEST_VERSION" >> $GITHUB_ENV
 
-    - name: Download ChromeDriver and Chrome for Testing
-      run: |
-        VERSION=${{ steps.get_chrome_version.outputs.chrome_version }}
-        echo "Downloading ChromeDriver version $VERSION"
-        curl -s -o chromedriver-linux64.zip "https://storage.googleapis.com/chrome-for-testing-public/$VERSION/linux64/chromedriver-linux64.zip"
-        unzip chromedriver-linux64.zip
-        chmod +x chromedriver-linux64/chromedriver
-        sudo mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
+      - name: Download ChromeDriver and Chrome for Testing
+        run: |
+          set -e
+          echo "Using Chrome version: $chrome_version"
 
-        echo "Downloading Chrome version $VERSION"
-        curl -s -o chrome-linux64.zip "https://storage.googleapis.com/chrome-for-testing-public/$VERSION/linux64/chrome-linux64.zip"
-        unzip chrome-linux64.zip
-        sudo mv linux64/chrome-linux64 /opt/google/chrome
-        sudo ln -sf /opt/google/chrome/chrome-linux64 /usr/bin/google-chrome
+          echo "Downloading ChromeDriver..."
+          curl -s -o chromedriver-linux64.zip "https://storage.googleapis.com/chrome-for-testing-public/$chrome_version/linux64/chromedriver-linux64.zip"
+          unzip chromedriver-linux64.zip
+          chmod +x chromedriver-linux64/chromedriver
+          sudo mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
 
-    - name: Start virtual display
-      run: |
-        Xvfb :99 -screen 0 1920x1080x24 &
-        sleep 3
-        echo "DISPLAY is $DISPLAY"
+          echo "Downloading Chrome..."
+          curl -s -o chrome-linux64.zip "https://storage.googleapis.com/chrome-for-testing-public/$chrome_version/linux64/chrome-linux64.zip"
+          unzip chrome-linux64.zip
+          sudo mv linux64/chrome-linux64 /opt/google/chrome
+          sudo ln -sf /opt/google/chrome/chrome-linux64/chrome /usr/bin/google-chrome
 
-    - name: Run Katalon tests
-      env:
-        KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
-        DISPLAY: :99
-      run: |
-        ./Katalon_Studio_Engine_Linux_64-9.2.0/katalonc \
-          -noSplash \
-          -runMode=console \
-          -projectPath=$(pwd)/DemoTestsStudioAssist.prj \
-          -retry=0 \
-          -testSuitePath="Test Suites/selfHealingSuite" \
-          -executionProfile="default" \
-          -browserType="Chrome (headless)" \
-          -apiKey="${KATALON_API_KEY}"
+      - name: Start virtual display
+        run: |
+          set -e
+          Xvfb :99 -screen 0 1920x1080x24 &
+          sleep 3
+          echo "Virtual display started on DISPLAY=:99"
+
+      - name: Run Katalon tests
+        env:
+          KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
+          DISPLAY: :99
+        run: |
+          set -e
+          ./Katalon_Studio_Engine_Linux_64-9.2.0/katalonc \
+            -noSplash \
+            -runMode=console \
+            -projectPath=$(pwd)/DemoTestsStudioAssist.prj \
+            -retry=0 \
+            -testSuitePath="Test Suites/selfHealingSuite" \
+            -executionProfile="default" \
+            -browserType="Chrome (headless)" \
+            -apiKey="${KATALON_API_KEY}"
