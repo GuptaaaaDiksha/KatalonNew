@@ -3,10 +3,10 @@ name: Run Katalon Tests
 on:
   push:
     branches:
-      - develop
+      - Develop
   pull_request:
     branches:
-      - develop
+      - Develop
 
 jobs:
   katalon-test:
