@@ -1,5 +1,3 @@
-name: Run Katalon Tests
-
 on:
   push:
     branches: [ develop ]
@@ -25,7 +23,6 @@ jobs:
         run: |
           wget https://download.katalon.com/9.2.0/Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
           tar -xvzf Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
-
       - name: Run Katalon Tests
         run: |
           ./Katalon_Studio_Engine_Linux_64-9.2.0/katalonc \
