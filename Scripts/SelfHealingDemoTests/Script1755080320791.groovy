@@ -37,7 +37,7 @@ WebUI.click(findTestObject('Object Repository/Page_OrangeHRM/input_Admin_oxd-inp
 
 WebUI.click(findTestObject('Object Repository/Page_OrangeHRM/span_Admin'))
 
-WebUI.setText(findTestObject('Object Repository/Page_OrangeHRM/input'), 'Diksha')
+WebUI.setText(findTestObject('Object Repository/Page_OrangeHRM/input'), 'Dikshaa')
 
 WebUI.click(findTestObject('Object Repository/Page_OrangeHRM/div_System UsersUsernameUser Role-- Select _3397a3'))
 
