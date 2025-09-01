@@ -1,58 +1,56 @@
-name: Run Katalon Tests
+name: Katalon Test Workflow
 
 on:
   push:
-    branches:
-      - Develop
+    branches: [ Develop ]
   pull_request:
-    branches:
-      - Develop
-  workflow_dispatch:  #
-
+    branches: [ Develop ]
 
 jobs:
   katalon-test:
     runs-on: ubuntu-latest
 
-    env:
-      DISPLAY: :99
-      KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Set up Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: temurin
-          java-version: '17'
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: temurin
+        java-version: '17'
 
-      - name: Download Katalon Studio Engine
-        run: |
-          wget https://download.katalon.com/9.2.0/Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
-          tar -xzf Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
+    - name: Install ChromeDriver matching installed Chrome
+      run: |
+        sudo apt-get update
+        sudo apt-get install -yqq unzip curl jq
+        CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+' | head -1)
+        echo "Installed Chrome version: $CHROME_VERSION"
+        DRIVER_VERSION=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json" | \
+          jq -r --arg ver "$CHROME_VERSION" '.channels.Stable.versions[] | select(.version | startswith($ver)) | .version' | head -1)
+        echo "Matching ChromeDriver version: $DRIVER_VERSION"
+        curl -O https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/$DRIVER_VERSION/linux64/chromedriver-linux64.zip
+        unzip chromedriver-linux64.zip
+        chmod +x chromedriver-linux64/chromedriver
+        sudo mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
 
-      - name: Start virtual display
-        run: |
-          Xvfb :99 -screen 0 1920x1080x24 &
-          sleep 3
+    - name: Start virtual display
+      run: |
+        Xvfb :99 -screen 0 1920x1080x24 &
+        sleep 3
+        echo "DISPLAY is $DISPLAY"
 
-      - name: Verify project file exists
-        run: ls -lah "$(pwd)/DemoTestsStudioAssist.prj"
-
-      - name: Run Katalon tests
-        run: |
-          ./Katalon_Studio_Engine_Linux_64-9.2.0/katalonc \
-            -noSplash \
-            -runMode=console \
-            -projectPath="$(pwd)/DemoTestsStudioAssist.prj" \
-            -retry=0 \
-            -testSuitePath="Test Suites/selfHealingSuite" \
-            -executionProfile="default" \
-            -browserType="Chrome (headless)" \
-            -apiKey="${KATALON_API_KEY}"
-
-      - name: Show logs if failed
-        if: failure()
-        run: cat ./Katalon_Studio_Engine_Linux_64-9.2.0/configuration/*.log
+    - name: Run Katalon tests
+      env:
+        KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
+        DISPLAY: :99
+      run: |
+        ./Katalon_Studio_Engine_Linux_64-9.2.0/katalonc \
+          -noSplash \
+          -runMode=console \
+          -projectPath=$(pwd)/DemoTestsStudioAssist.prj \
+          -retry=0 \
+          -testSuitePath="Test Suites/selfHealingSuite" \
+          -executionProfile="default" \
+          -browserType="Chrome (headless)" \
+          -apiKey="${KATALON_API_KEY}"
