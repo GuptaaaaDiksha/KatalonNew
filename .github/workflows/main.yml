@@ -1,9 +1,9 @@
-name: Katalon Test with UI (headless Chrome)
+name: Katalon UI Test Workflow
 
 on:
   push:
     branches:
-      - Develop
+      - main
   workflow_dispatch:
 
 jobs:
@@ -30,27 +30,47 @@ jobs:
         curl -LO https://github.com/katalon-studio/katalon-studio/releases/download/v9.2.0/Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
         tar -xzf Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
 
-    - name: Download Chrome for Testing and ChromeDriver
+    - name: Get latest stable Chrome-for-Testing version
+      id: get_chrome_version
       run: |
-        # Fetch Chrome-for-Testing versions JSON
-        curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json > versions.json
+        LATEST_VERSION=$(curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json | jq -r '.channels.stable.version')
+        echo "chrome_version=$LATEST_VERSION" >> $GITHUB_OUTPUT
 
-        STABLE_VERSION=$(jq -r '.channels.Stable.version' versions.json)
-        echo "Latest stable chrome-for-testing version: $STABLE_VERSION"
-
-        # Download ChromeDriver for linux64
-        CHROMEDRIVER_URL=$(jq -r '.channels.Stable.downloads.chromedriver[] | select(.platform=="linux64") | .url' versions.json)
-        echo "Downloading ChromeDriver from $CHROMEDRIVER_URL"
-        curl -LO "$CHROMEDRIVER_URL"
-
-        unzip chromedriver-linux64.zip
+    - name: Download ChromeDriver and Chrome-for-Testing
+      run: |
+        VERSION=${{ steps.get_chrome_version.outputs.chrome_version }}
+        echo "Downloading ChromeDriver version $VERSION"
+        curl -sSL -o chromedriver-linux64.zip "https://storage.googleapis.com/chrome-for-testing-public/$VERSION/linux64/chromedriver-linux64.zip"
+        unzip -o chromedriver-linux64.zip -d chromedriver-linux64
         chmod +x chromedriver-linux64/chromedriver
         sudo mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
 
-        # Download Chrome for Testing for linux64
-        CHROME_URL=$(jq -r '.channels.Stable.downloads.chrome[] | select(.platform=="linux64") | .url' versions.json)
-        echo "Downloading Chrome from $CHROME_URL"
-        curl -LO "$CHROME_URL"
+        echo "Downloading Chrome-for-Testing $VERSION"
+        curl -sSL -o chrome-linux64.zip "https://storage.googleapis.com/chrome-for-testing-public/$VERSION/linux64/chrome-linux64.zip"
+        unzip -o chrome-linux64.zip -d chrome-linux64
 
-        CHROME_ARCHIVE=${CHROME_URL##*/}
-        ec
+    - name: Set Chrome binary path
+      run: |
+        echo "CHROME_BIN=$(pwd)/chrome-linux64/chrome" >> $GITHUB_ENV
+
+    - name: Start virtual display (Xvfb)
+      run: |
+        Xvfb :99 -screen 0 1920x1080x24 &
+        sleep 3
+        echo "DISPLAY is :99" >> $GITHUB_ENV
+
+    - name: Run Katalon tests with UI enabled
+      env:
+        KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
+        DISPLAY: :99
+        CHROME_BIN: ${{ env.CHROME_BIN }}
+      run: |
+        ./Katalon_Studio_Engine_Linux_64-9.2.0/katalonc \
+          -noSplash \
+          -runMode=console \
+          -projectPath=$(pwd)/DemoTestsStudioAssist.prj \
+          -retry=0 \
+          -testSuitePath="Test Suites/selfHealingSuite" \
+          -executionProfile="default" \
+          -browserType="Chrome" \
+          -apiKey="${KATALON_API_KEY}"
