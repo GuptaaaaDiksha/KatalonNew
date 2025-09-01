@@ -11,6 +11,9 @@ jobs:
   katalon-test:
     runs-on: ubuntu-latest
 
+    env:
+      KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
+
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
@@ -19,30 +22,34 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '17'   # Use Java 17 for compatibility
 
-      - name: Install dependencies (xvfb, wget)
+      - name: Install dependencies (xvfb, wget, curl)
         run: |
           sudo apt-get update
-          sudo apt-get install -y xvfb wget
+          sudo apt-get install -y xvfb wget curl
+
+      - name: Test network connectivity to Katalon license server
+        run: curl -v https://license.katalon.com
 
       - name: Download Katalon Studio
         run: |
           wget https://download.katalon.com/9.2.0/Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
           tar -xvzf Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
 
+      - name: Clean Katalon license cache
+        run: rm -rf ~/.katalon/license/* || echo "No license cache to clear"
+
+      - name: Verify project file presence
+        run: ls -lah "$(pwd)/DemoTestsStudioAssist.prj" || echo "Project file NOT found!"
+
       - name: Run Katalon Tests in headless mode
         env:
+          DISPLAY: :99
+          NO_AT_BRIDGE: 1
           KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
         run: |
-          echo "=== Starting virtual display ==="
-          Xvfb :99 & export DISPLAY=:99
-          export NO_AT_BRIDGE=1
-          echo "DISPLAY=$DISPLAY"
-          date
-          echo "=== Verifying project file ==="
-          ls -lah "$(pwd)/DemoTestsStudioAssist.prj" || echo "Project file NOT found!"
-          echo "=== Running Katalon tests ==="
+          Xvfb :99 & sleep 3
           timeout 400 ./Katalon_Studio_Engine_Linux_64-9.2.0/katalonc \
             -noSplash \
             -runMode=console \
@@ -51,20 +58,9 @@ jobs:
             -testSuitePath="Test Suites/SelfHealingSuite" \
             -executionProfile="default" \
             -browserType="Chrome (headless)" \
+            -apiKey="${KATALON_API_KEY}" \
             -consoleLog
-          echo "=== Katalon test run complete ==="
-          date
 
-      - name: Dump Katalon logs (always)
-        if: always()
-        run: |
-          echo "=== Printing Katalon logs ==="
-          cat ./Katalon_Studio_Engine_Linux_64-9.2.0/configuration/*.log || echo "No log found"
-
-      # Optional: Upload logs for later inspection (uncomment if needed)
-      # - name: Upload Katalon logs
-      #   if: always()
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: katalon-logs
-      #     path: ./Katalon_Studio_Engine_Linux_64-9.2.0/configuration/*.log
+      - name: Show Katalon logs on failure
+        if: failure()
+        run: cat ./Katalon_Studio_Engine_Linux_64-9.2.0/configuration/*.log || echo "No logs found"
