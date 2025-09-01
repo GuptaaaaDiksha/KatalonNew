@@ -1,0 +1,40 @@
+name: Run Katalon Tests
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  katalon-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Download Katalon Studio
+        run: |
+          wget https://download.katalon.com/9.2.0/Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
+          tar -xvzf Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
+
+      - name: Run Katalon Tests
+        run: |
+          ./Katalon_Studio_Engine_Linux_64-9.2.0/katalonc \
+            -noSplash \
+            -runMode=console \
+            -projectPath=$(pwd)/DemoTestsStudioAssist.prj \
+            -retry=0 \
+            -testSuitePath="Test Suites/selfHealingSuite" \
+            -executionProfile="default" \
+            -browserType="Chrome"
+    
+env:
+  KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
