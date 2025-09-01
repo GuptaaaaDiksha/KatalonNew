@@ -11,9 +11,6 @@ jobs:
   katalon-test:
     runs-on: ubuntu-latest
 
-    env:
-      KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
-
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
@@ -35,17 +32,39 @@ jobs:
           tar -xvzf Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
 
       - name: Run Katalon Tests in headless mode
+        env:
+          KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
         run: |
+          echo "=== Starting virtual display ==="
           Xvfb :99 & export DISPLAY=:99
-          ./Katalon_Studio_Engine_Linux_64-9.2.0/katalonc \
+          export NO_AT_BRIDGE=1
+          echo "DISPLAY=$DISPLAY"
+          date
+          echo "=== Verifying project file ==="
+          ls -lah "$(pwd)/DemoTestsStudioAssist.prj" || echo "Project file NOT found!"
+          echo "=== Running Katalon tests ==="
+          timeout 400 ./Katalon_Studio_Engine_Linux_64-9.2.0/katalonc \
             -noSplash \
             -runMode=console \
-            -projectPath=$(pwd)/DemoTestsStudioAssist.prj \
+            -projectPath="$(pwd)/DemoTestsStudioAssist.prj" \
             -retry=0 \
             -testSuitePath="Test Suites/SelfHealingSuite" \
             -executionProfile="default" \
-            -browserType="Chrome (headless)"
+            -browserType="Chrome (headless)" \
+            -consoleLog
+          echo "=== Katalon test run complete ==="
+          date
 
-      - name: Show Katalon logs on failure
-        if: failure()
-        run: cat ./Katalon_Studio_Engine_Linux_64-9.2.0/configuration/*.log
+      - name: Dump Katalon logs (always)
+        if: always()
+        run: |
+          echo "=== Printing Katalon logs ==="
+          cat ./Katalon_Studio_Engine_Linux_64-9.2.0/configuration/*.log || echo "No log found"
+
+      # Optional: Upload logs for later inspection (uncomment if needed)
+      # - name: Upload Katalon logs
+      #   if: always()
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: katalon-logs
+      #     path: ./Katalon_Studio_Engine_Linux_64-9.2.0/configuration/*.log
