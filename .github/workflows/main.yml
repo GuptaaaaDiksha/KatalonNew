@@ -2,9 +2,10 @@ name: Katalon Test Workflow
 
 on:
   push:
-    branches: [ main ]
+    branches: [ Develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ Develop ]
+  workflow_dispatch:   # <--- enables manual UI trigger
 
 jobs:
   katalon-test:
@@ -27,7 +28,6 @@ jobs:
 
     - name: Install ChromeDriver
       run: |
-        # Use fixed driver version compatible with stable Chrome (change if needed)
         DRIVER_VERSION="114.0.5735.90"
 
         echo "Downloading ChromeDriver version: $DRIVER_VERSION"
@@ -62,4 +62,3 @@ jobs:
           -executionProfile="default" \
           -browserType="Chrome (headless)" \
           -apiKey="${KATALON_API_KEY}"
-
