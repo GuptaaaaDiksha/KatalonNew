@@ -3,7 +3,7 @@ name: Katalon UI Test Workflow
 on:
   push:
     branches:
-      - Develop
+      - main
   workflow_dispatch:
 
 jobs:
@@ -33,9 +33,6 @@ jobs:
     - name: Get latest stable Chrome-for-Testing version
       id: get_chrome_version
       run: |
-        echo "Checking jq version..."
-        jq --version
-        echo "Fetching latest stable chrome version..."
         LATEST_VERSION=$(curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json | jq -r '.channels.stable.version')
         echo "Latest stable chrome version: $LATEST_VERSION"
         echo "chrome_version=$LATEST_VERSION" >> $GITHUB_OUTPUT
@@ -75,3 +72,4 @@ jobs:
           -executionProfile="default" \
           -browserType="Chrome (headless)" \
           -apiKey="${KATALON_API_KEY}"
+
