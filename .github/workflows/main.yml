@@ -1,9 +1,9 @@
-name: Katalon UI Test Workflow
+name: katalon-test
 
 on:
   push:
     branches:
-      - Develop
+      - main
   workflow_dispatch:
 
 jobs:
@@ -25,11 +25,6 @@ jobs:
         sudo apt-get update
         sudo apt-get install -yqq unzip curl jq xvfb
 
-    - name: Download Katalon Studio Engine
-      run: |
-        curl -LO https://github.com/katalon-studio/katalon-studio/releases/download/v9.2.0/Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
-        tar -xzf Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
-
     - name: Get latest stable Chrome-for-Testing version
       id: get_chrome_version
       run: |
@@ -50,7 +45,7 @@ jobs:
         curl -s -o chrome-linux64.zip "https://storage.googleapis.com/chrome-for-testing-public/$VERSION/linux64/chrome-linux64.zip"
         unzip chrome-linux64.zip
         sudo mv linux64/chrome-linux64 /opt/google/chrome
-        sudo ln -s /opt/google/chrome/chrome-linux64 /usr/bin/google-chrome
+        sudo ln -sf /opt/google/chrome/chrome-linux64 /usr/bin/google-chrome
 
     - name: Start virtual display
       run: |
