@@ -1,66 +1,54 @@
-name: Katalon Test Workflow
+name: Run Katalon Tests
 
 on:
   push:
-    branches: [ develop ]
+    branches:
+      - main
   pull_request:
-    branches: [ develop ]
-  workflow_dispatch:
+    branches:
+      - main
 
 jobs:
   katalon-test:
     runs-on: ubuntu-latest
 
     env:
-      KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
+      JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/11.0.28-6/x64
+      DISPLAY: :99
 
     steps:
-      - name: Checkout source code
-        uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'   # Use Java 17 for compatibility
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: temurin
+        java-version: '17'
 
-      - name: Install dependencies (xvfb, wget, curl)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y xvfb wget curl
+    - name: Verify project file exists
+      run: ls -lah "$(pwd)/DemoTestsStudioAssist.prj" || echo "Project file NOT found!"
 
-      - name: Test network connectivity to Katalon license server
-        run: curl -v https://license.katalon.com
+    - name: Start virtual display
+      run: |
+        Xvfb :99 -screen 0 1920x1080x24 &
+        sleep 3
+        echo "DISPLAY is $DISPLAY"
 
-      - name: Download Katalon Studio
-        run: |
-          wget https://download.katalon.com/9.2.0/Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
-          tar -xvzf Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
+    - name: Run Katalon tests
+      env:
+        KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
+      run: |
+        ./Katalon_Studio_Engine_Linux_64-9.2.0/katalonc \
+          -noSplash \
+          -runMode=console \
+          -projectPath=$(pwd)/DemoTestsStudioAssist.prj \
+          -retry=0 \
+          -testSuitePath="Test Suites/SelfHealingSuite" \
+          -executionProfile="default" \
+          -browserType="Chrome (headless)" \
+          -apiKey="${KATALON_API_KEY}"
 
-      - name: Clean Katalon license cache
-        run: rm -rf ~/.katalon/license/* || echo "No license cache to clear"
-
-      - name: Verify project file presence
-        run: ls -lah "$(pwd)/DemoTestsStudioAssist.prj" || echo "Project file NOT found!"
-
-      - name: Run Katalon Tests in headless mode
-        env:
-          DISPLAY: :99
-          NO_AT_BRIDGE: 1
-          KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
-        run: |
-          Xvfb :99 & sleep 3
-          timeout 400 ./Katalon_Studio_Engine_Linux_64-9.2.0/katalonc \
-            -noSplash \
-            -runMode=console \
-            -projectPath="$(pwd)/DemoTestsStudioAssist.prj" \
-            -retry=0 \
-            -testSuitePath="Test Suites/SelfHealingSuite" \
-            -executionProfile="default" \
-            -browserType="Chrome (headless)" \
-            -apiKey="${KATALON_API_KEY}" \
-            -consoleLog
-
-      - name: Show Katalon logs on failure
-        if: failure()
-        run: cat ./Katalon_Studio_Engine_Linux_64-9.2.0/configuration/*.log || echo "No logs found"
+    - name: Cleanup
+      run: |
+        echo "Cleanup tasks if any"
