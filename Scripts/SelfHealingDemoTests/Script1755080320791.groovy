@@ -43,5 +43,5 @@ WebUI.click(findTestObject('Object Repository/Page_OrangeHRM/div_System UsersUse
 
 WebUI.click(findTestObject('Page_OrangeHRM/button_Search'))
 
-WebUI.delay(0)
+WebUI.delay(70)
 
