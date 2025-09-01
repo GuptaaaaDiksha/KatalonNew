@@ -3,7 +3,7 @@ name: Katalon UI Test Workflow
 on:
   push:
     branches:
-      - main
+      - Develop
   workflow_dispatch:
 
 jobs:
@@ -72,4 +72,3 @@ jobs:
           -executionProfile="default" \
           -browserType="Chrome (headless)" \
           -apiKey="${KATALON_API_KEY}"
-
