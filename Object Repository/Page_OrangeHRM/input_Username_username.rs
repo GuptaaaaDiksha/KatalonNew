@@ -4,11 +4,13 @@
    <name>input_Username_username</name>
    <tag></tag>
    <elementGuidId>02283531-2044-4a3e-b345-3e90bdde731f</elementGuidId>
-   <imagePath></imagePath>
    <selectorCollection>
       <entry>
          <key>XPATH</key>
-         <value>//input[@name='username908']</value>
+         <value>//input[@name='username']</value>
+      </entry>
+      <entry>
+         <key>IMAGE</key>
       </entry>
       <entry>
          <key>CSS</key>
@@ -17,10 +19,6 @@
       <entry>
          <key>BASIC</key>
          <value>//*[@name = 'username' and @placeholder = 'username']</value>
-      </entry>
-      <entry>
-         <key>IMAGE</key>
-         <value></value>
       </entry>
    </selectorCollection>
    <selectorMethod>XPATH</selectorMethod>
