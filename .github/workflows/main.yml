@@ -3,10 +3,12 @@ name: Run Katalon Tests
 on:
   push:
     branches:
-      - Develop  # Use capital D if your branch is 'Develop'
+      - Develop
   pull_request:
     branches:
       - Develop
+  workflow_dispatch:  #
+
 
 jobs:
   katalon-test:
