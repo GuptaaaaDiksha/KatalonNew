@@ -5,8 +5,7 @@ on:
     branches: [ develop ]
   pull_request:
     branches: [ develop ]
-  workflow_dispatch:  # ✅ Correct placement
-
+  workflow_dispatch:  #
 jobs:
   katalon-test:
     runs-on: ubuntu-latest
