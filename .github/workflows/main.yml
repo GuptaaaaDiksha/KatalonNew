@@ -41,5 +41,44 @@ jobs:
           echo "Downloading ChromeDriver..."
           curl -s -o chromedriver-linux64.zip "https://storage.googleapis.com/chrome-for-testing-public/$chrome_version/linux64/chromedriver-linux64.zip"
           unzip chromedriver-linux64.zip
+          ls -l chromedriver-linux64/
           chmod +x chromedriver-linux64/chromedriver
-          sudo mv chromedriver-linux64/chromedr
+          sudo mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
+
+          echo "Downloading Chrome..."
+          curl -s -o chrome-linux64.zip "https://storage.googleapis.com/chrome-for-testing-public/$chrome_version/linux64/chrome-linux64.zip"
+          unzip chrome-linux64.zip
+          sudo mv chrome-linux64 /opt/google/chrome
+          sudo ln -sf /opt/google/chrome/chrome /usr/bin/google-chrome
+
+      - name: Start virtual display
+        run: |
+          set -e
+          Xvfb :99 -screen 0 1920x1080x24 &
+          sleep 3
+          echo "Virtual display started on DISPLAY=:99"
+
+      - name: Download and Extract Katalon Studio Engine
+        env:
+          KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
+        run: |
+          set -e
+          curl -L -O "https://download.katalon.com/9.2.0/Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz"
+          tar -xvzf Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
+          chmod +x Katalon_Studio_Engine_Linux_64-9.2.0/katalonc
+
+      - name: Run Katalon tests
+        env:
+          KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
+          DISPLAY: :99
+        run: |
+          set -e
+          ./Katalon_Studio_Engine_Linux_64-9.2.0/katalonc \
+            -noSplash \
+            -runMode=console \
+            -projectPath=$(pwd)/DemoTestsStudioAssist.prj \
+            -retry=0 \
+            -testSuitePath="Test Suites/selfHealingSuite" \
+            -executionProfile="default" \
+            -browserType="Chrome (headless)" \
+            -apiKey="${KATALON_API_KEY}"
