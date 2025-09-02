@@ -78,3 +78,4 @@ jobs:
             -executionProfile="default" \
             -browserType="Chrome (headless)" \
             -apiKey="${KATALON_API_KEY}"
+
