@@ -19,6 +19,7 @@ import org.openqa.selenium.Keys as Keys
 
 WebUI.openBrowser('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
 
+
 WebUI.doubleClick(findTestObject('Object Repository/Page_OrangeHRM/p_Username  Admin'))
 
 WebUI.click(findTestObject('Object Repository/Page_OrangeHRM/body_root             --oxd-primary-one-col_2a4dc5'))
