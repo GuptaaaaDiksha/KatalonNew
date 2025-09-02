@@ -25,13 +25,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -yqq unzip curl jq xvfb
 
-      - name: Get latest stable Chrome-for-Testing version
-        id: get_chrome_version
+      - name: Set Chrome version
         run: |
-          set -e
-          LATEST_VERSION=$(curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json | jq -r '.channels.Stable.version')
-          echo "Latest stable Chrome version: $LATEST_VERSION"
-          echo "chrome_version=$LATEST_VERSION" >> $GITHUB_ENV
+          echo "chrome_version=120.0.6482.75" >> $GITHUB_ENV
 
       - name: Download ChromeDriver and Chrome for Testing
         run: |
@@ -69,17 +65,8 @@ jobs:
         env:
           KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
           DISPLAY: :99
-          CHROME_BIN: /opt/google/chrome/chrome
         run: |
           set -e
-
-          # Debug versions and paths
-          chromedriver --version
-          google-chrome --version
-          which google-chrome
-          ls -l /usr/local/bin/chromedriver
-
-          # Run katalon with driver auto-update disabled
           ./Katalon_Studio_Engine_Linux_64-9.2.0/katalonc \
             -noSplash \
             -runMode=console \
@@ -88,5 +75,4 @@ jobs:
             -testSuitePath="Test Suites/selfHealingSuite" \
             -executionProfile="default" \
             -browserType="Chrome (headless)" \
-            -apiKey="${KATALON_API_KEY}" \
-            --config -webui.autoUpdateDrivers=false
+            -apiKey="${KATALON_API_KEY}"
