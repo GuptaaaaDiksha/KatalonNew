@@ -25,8 +25,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -yqq unzip curl jq xvfb
 
-      - name: Set specific Chrome version manually (120.0.6099.224)
-        run: echo "chrome_version=120.0.6099.224" >> $GITHUB_ENV
+      - name: Set specific Chrome version (Stable 138.0.7204.183)
+        run: echo "chrome_version=138.0.7204.183" >> $GITHUB_ENV
 
       - name: Download ChromeDriver and Chrome for Testing
         run: |
@@ -46,6 +46,7 @@ jobs:
 
       - name: Start virtual display
         run: |
+          set -e
           Xvfb :99 -screen 0 1920x1080x24 &
           sleep 3
           echo "Virtual display started on DISPLAY=:99"
@@ -54,6 +55,7 @@ jobs:
         env:
           KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
         run: |
+          set -e
           curl -L -O "https://download.katalon.com/9.2.0/Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz"
           tar -xvzf Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
           chmod +x Katalon_Studio_Engine_Linux_64-9.2.0/katalonc
@@ -63,6 +65,7 @@ jobs:
           KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
           DISPLAY: :99
         run: |
+          set -e
           ./Katalon_Studio_Engine_Linux_64-9.2.0/katalonc \
             -noSplash \
             -runMode=console \
