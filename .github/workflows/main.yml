@@ -25,13 +25,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -yqq unzip curl jq xvfb
 
-      - name: Set specific Chrome version (Stable 138.0.7204.183)
-        run: echo "chrome_version=138.0.7204.183" >> $GITHUB_ENV
+      - name: Set specific Chrome version (v139)
+        run: echo "chrome_version=139.0.7258.138" >> $GITHUB_ENV
 
       - name: Download ChromeDriver and Chrome for Testing
         run: |
           set -e
           echo "Using Chrome version: $chrome_version"
+
           echo "Downloading ChromeDriver..."
           curl -s -o chromedriver-linux64.zip "https://storage.googleapis.com/chrome-for-testing-public/$chrome_version/linux64/chromedriver-linux64.zip"
           unzip chromedriver-linux64.zip
@@ -44,9 +45,13 @@ jobs:
           sudo mv chrome-linux64 /opt/google/chrome
           sudo ln -sf /opt/google/chrome/chrome /usr/bin/google-chrome
 
+      - name: Check Chrome + ChromeDriver versions
+        run: |
+          google-chrome --version
+          chromedriver --version
+
       - name: Start virtual display
         run: |
-          set -e
           Xvfb :99 -screen 0 1920x1080x24 &
           sleep 3
           echo "Virtual display started on DISPLAY=:99"
@@ -55,7 +60,6 @@ jobs:
         env:
           KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
         run: |
-          set -e
           curl -L -O "https://download.katalon.com/9.2.0/Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz"
           tar -xvzf Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
           chmod +x Katalon_Studio_Engine_Linux_64-9.2.0/katalonc
@@ -65,7 +69,6 @@ jobs:
           KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
           DISPLAY: :99
         run: |
-          set -e
           ./Katalon_Studio_Engine_Linux_64-9.2.0/katalonc \
             -noSplash \
             -runMode=console \
