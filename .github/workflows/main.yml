@@ -25,40 +25,42 @@ jobs:
           sudo apt-get update
           sudo apt-get install -yqq unzip curl jq xvfb
 
-      - name: Set Chrome version to Stable 138.0.7204.183
+      - name: Set Chrome version to 138.0.7204.183 (CfT)
         run: echo "chrome_version=138.0.7204.183" >> $GITHUB_ENV
 
       - name: Download matching ChromeDriver & Chrome for Testing
         run: |
           set -e
-          echo "Chrome version being used: $chrome_version"
+          echo "Using Chrome version: $chrome_version"
 
-          echo "→ Downloading ChromeDriver..."
-          curl -s -o chromedriver-linux64.zip \
+          # Download ChromeDriver
+          curl -s -o chromedriver.zip \
             "https://storage.googleapis.com/chrome-for-testing-public/$chrome_version/linux64/chromedriver-linux64.zip"
-          unzip chromedriver-linux64.zip
-          chmod +x chromedriver-linux64/chromedriver
-          sudo mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
+          unzip chromedriver.zip
+          chmod +x chromedriver
+          sudo mv chromedriver /usr/local/bin/chromedriver
 
-          echo "→ Downloading Chrome for Testing..."
-          curl -s -o chrome-linux64.zip \
+          # Download Chrome itself
+          curl -s -o chrome.zip \
             "https://storage.googleapis.com/chrome-for-testing-public/$chrome_version/linux64/chrome-linux64.zip"
-          unzip chrome-linux64.zip
+          unzip chrome.zip
           sudo mv chrome-linux64 /opt/google/chrome
           sudo ln -sf /opt/google/chrome/chrome /usr/bin/google-chrome
 
       - name: Verify installed versions
         run: |
-          google-chrome --version     # should now show 138.0.7204.183
-          chromedriver --version      # should match 
+          echo "Chrome binary version:"
+          /opt/google/chrome/chrome --version
+          echo "Chromedriver version:"
+          chromedriver --version
 
       - name: Start virtual display
         run: |
           Xvfb :99 -screen 0 1920x1080x24 &
           sleep 3
-          echo "Virtual display ready on DISPLAY=:99"
+          echo "DISPLAY is set to :99"
 
-      - name: Download and extract Katalon Engine
+      - name: Download and extract Katalon Studio Engine
         env:
           KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
         run: |
@@ -70,6 +72,7 @@ jobs:
         env:
           KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
           DISPLAY: :99
+          CHROME_BIN: /opt/google/chrome/chrome  # Force use of CfT Chrome
         run: |
           ./Katalon_Studio_Engine_Linux_64-9.2.0/katalonc \
             -noSplash \
