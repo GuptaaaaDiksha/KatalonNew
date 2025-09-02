@@ -47,8 +47,8 @@ jobs:
           echo "Downloading Chrome..."
           curl -s -o chrome-linux64.zip "https://storage.googleapis.com/chrome-for-testing-public/$chrome_version/linux64/chrome-linux64.zip"
           unzip chrome-linux64.zip
-          sudo mv linux64/chrome-linux64 /opt/google/chrome
-          sudo ln -sf /opt/google/chrome/chrome-linux64/chrome /usr/bin/google-chrome
+          sudo mv chrome-linux64 /opt/google/chrome
+          sudo ln -sf /opt/google/chrome/chrome /usr/bin/google-chrome
 
       - name: Start virtual display
         run: |
